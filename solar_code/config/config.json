@@ -1,0 +1,23 @@
+{
+    "llm":[
+        {
+            "api_base":"http://localhost:11434/v1",
+            "api_key":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "model_name":[
+                "name1",
+                "name2"
+            ]
+        },
+        {
+            "api_base":"http://localhost:8888/v1",
+            "api_key":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "model_name":[
+                "name_1",
+                "name_2"
+            ]
+        }
+    ],
+    "SQLite":{
+        
+    }
+}
