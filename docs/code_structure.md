@@ -7,6 +7,7 @@ Solar/
 ├── plugins/                  # 插件文件夹（暂时无用）
 ├── tools/                    # 工具模块
 ├── games/                    # 小游戏模型（huang）
+├── logs/                     # 日志存储文件夹
 ├── resources/                # 资源文件
 ├── main.py                   # 程序入口
 └── config.py                 # 配置文件读取
