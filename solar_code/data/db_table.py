@@ -23,11 +23,8 @@ class Chat:
                             )
                     ''')
         self.conn.commit()
-    def create_chat(self,session_text,role,content):
-        self.session_text=session_text
-        namespace = uuid.NAMESPACE_DNS
-        name = self.session_text
-        self.session_id=str(uuid.uuid1())
+    def create_chat(self,session_id,role,content):
+        self.session_id=session_id
         self.role=role
         self.content=content
         self.cursor.execute('''
@@ -74,6 +71,98 @@ class Chat:
             self.conn.close()
         except:
             pass
+
+#标题和会话序号
+class Session_Title:
+    def __init__(self, db_path='app.db'):
+        self.conn = sqlite3.connect(db_path)
+        self.conn.row_factory = sqlite3.Row
+        self.cursor = self.conn.cursor()
+        self._create_table()
+    def _create_table(self):
+        """创建会话标题表（如果不存在）"""
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS session_titles (
+                session_id TEXT PRIMARY KEY NOT NULL,
+                title TEXT NOT NULL
+            )
+        ''')
+        self.conn.commit()
+    def create_title(self, session_id: str, title: str) -> bool:
+        """插入新的会话标题"""
+        try:
+            self.cursor.execute(
+                'INSERT INTO session_titles (session_id, title) VALUES (?, ?)',
+                (session_id, title)
+            )
+            self.conn.commit()
+            return self.cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"插入失败: {e}")
+            return False
+    def update_title(self, session_id: str, **kwargs) -> bool:
+        """更新会话标题（支持部分字段更新）"""
+        set_clauses = []
+        params = []
+        allowed_fields = ['title']
+        
+        for key in allowed_fields:
+            if key in kwargs:
+                set_clauses.append(f"{key} = ?")
+                params.append(kwargs[key])
+        
+        if not set_clauses:
+            return False  # 无有效字段需要更新
+        
+        query = f"""
+            UPDATE session_titles 
+            SET {', '.join(set_clauses)}
+            WHERE session_id = ?
+        """
+        params.append(session_id)
+        
+        try:
+            self.cursor.execute(query, params)
+            self.conn.commit()
+            return self.cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"更新失败: {e}")
+            return False
+    def delete_title(self, session_id: str) -> bool:
+        """删除指定会话的标题记录"""
+        try:
+            self.cursor.execute(
+                "DELETE FROM session_titles WHERE session_id = ?",
+                (session_id,)
+            )
+            self.conn.commit()
+            return self.cursor.rowcount > 0
+        except sqlite3.Error as e:
+            print(f"删除失败: {e}")
+            return False
+    def get_by_session_id(self, session_id: str) -> dict:
+        """通过 session_id 获取会话标题信息"""
+        self.cursor.execute(
+            "SELECT * FROM session_titles WHERE session_id = ?",
+            (session_id,)
+        )
+        row = self.cursor.fetchone()
+        return dict(row) if row else None
+    def get_all_title(self) -> list[dict]:
+        """获取所有会话标题信息"""
+        self.cursor.execute("SELECT * FROM session_titles")
+        return [dict(row) for row in self.cursor.fetchall()]
+    def close(self):
+        """关闭数据库连接"""
+        self.cursor.close()
+        self.conn.close()
+    def __del__(self):
+        """对象销毁时确保关闭连接"""
+        try:
+            self.conn.close()
+        except:
+            pass
+
 
 # 用户信息存储表管理类
 class UserInfoManager:
