@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QPushButton
-from constants import ICON_PATH  # 直接导入根目录的 constants
+from config import ICON_PATH  # 直接导入根目录的 constants
 from tools import get_logger
 from PyQt6.QtGui import QIcon
 

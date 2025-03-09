@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit, QLineEdit, QPushButton, QVBoxLayout, QWidget, QStackedWidget, QMenuBar, QLabel
 from PyQt6.QtGui import QIcon, QAction
-from constants import ICON_PATH  # 直接导入根目录的 constants
+from config import ICON_PATH
 from ui.dialogs.settings import SettingsDialog
 from ui.dialogs.about import AboutDialog
 from tools import get_logger
