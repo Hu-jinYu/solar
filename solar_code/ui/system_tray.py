@@ -1,9 +1,9 @@
 from PyQt6.QtWidgets import QSystemTrayIcon, QMenu, QApplication
 from PyQt6.QtGui import QIcon, QAction
 from ui.assistant_window import AssistantWindow  # 导入AssistantWindow
-from constants import ICON_PATH  # 导入图标路径
+from config import ICON_PATH # 导入图标路径
 from tools import get_logger
-
+import sys
 logger = get_logger(__name__)
 
 class SystemTrayApp:

@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton  # 新增 QPushButton 导入（如果需要关闭按钮）
 from PyQt6.QtGui import QIcon  # 新增导入 QIcon
 from PyQt6.QtCore import Qt  # 如果需要对齐等 Qt 属性，可导入
-from constants import ICON_PATH  # 直接导入根目录的 constants
+from config import ICON_PATH  # 直接导入根目录的 constants
 from tools import get_logger
 
 logger = get_logger(__name__)
