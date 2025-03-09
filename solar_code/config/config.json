@@ -1,23 +1,51 @@
 {
-    "llm":[
+    "llm": [
         {
-            "api_base":"http://localhost:11434/v1",
-            "api_key":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "model_name":[
-                "name1",
-                "name2"
+            "OpenAI": [
+                {
+                    "api_base": "http://localhost:8888/v1",
+                    "describe": "\u670d\u52a1\u5730\u5740",
+                    "type": "str",
+                    "default": null
+                },
+                {
+                    "api_key": "sk-xxx",
+                    "describe": "API\u5bc6\u94a5",
+                    "type": "str",
+                    "default": null
+                },
+                {
+                    "model_name": [],
+                    "describe": "\u53ef\u7528\u6a21\u578b",
+                    "type": "list",
+                    "default": []
+                }
             ]
         },
         {
-            "api_base":"http://localhost:8888/v1",
-            "api_key":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "model_name":[
-                "name_1",
-                "name_2"
+            "Qwen": [
+                {
+                    "api_base": "http://localhost:9999/v1",
+                    "describe": "\u670d\u52a1\u7aef\u70b9",
+                    "type": "str",
+                    "default": null
+                },
+                {
+                    "api_key": "qwen-xxx",
+                    "describe": "\u8bbf\u95ee\u4ee4\u724c",
+                    "type": "str",
+                    "default": null
+                },
+                {
+                    "params": {},
+                    "describe": "\u6a21\u578b\u53c2\u6570",
+                    "type": "dict",
+                    "default": {
+                        "temperature": 0.7
+                    }
+                }
             ]
         }
     ],
-    "SQLite":{
-        
-    }
+    "SQLite": []
 }

@@ -10,7 +10,6 @@ class DialogueMessage:
     session_id: str      # 会话ID
     role: str            # 消息角色（user/assistant/system）
     content: str         # 消息内容
-    timestamp: float     # 时间戳
 
 @dataclass
 class Session_Title:
