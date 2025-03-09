@@ -25,3 +25,8 @@ class dialogue_data:
     dialogue_messages: List[DialogueMessage]
 
 
+@dataclass
+class personality:
+    """AI对话人格"""
+    name:str
+    system_prompt:str
