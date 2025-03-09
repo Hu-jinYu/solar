@@ -357,34 +357,40 @@ class SystemTrayApp:
             sys.exit(1)
         self.tray_icon = QSystemTrayIcon(self.icon, parent=app)
         
-        # 新增：连接托盘图标的单击事件到显示窗口
-        self.tray_icon.activated.connect(self.show_window)  # 处理单击托盘图标
+        # 修正：仅连接左键单击事件到显示窗口
+        self.tray_icon.activated.connect(lambda reason: self.handle_tray_activation(reason))
         
         self.create_menu()
         self.assistant_window = AssistantWindow()
         self.tray_icon.show()
+    def handle_tray_activation(self, reason):
+        """处理托盘图标激活事件，区分左右键点击"""
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:  # 左键单击
+            self.show_window()
+        elif reason == QSystemTrayIcon.ActivationReason.Context:  # 右键点击
+            # 不做处理，让系统自动显示上下文菜单
+            pass
     def create_menu(self):
         menu = QMenu()
-        menu.addAction("显示助手", self.show_window)  # 右键菜单显示
+        menu.addAction("显示助手", self.show_window)  # 右键菜单显示项
         menu.addAction("退出程序", self.exit_app)
-        self.tray_icon.setContextMenu(menu)
-    def show_window(self, reason=QSystemTrayIcon.ActivationReason.Trigger):  # 新增参数默认值
+        self.tray_icon.setContextMenu(menu)  # 设置上下文菜单
+    def show_window(self):
         """显示主窗口并激活"""
-        self.assistant_window.showNormal()  # 确保窗口正常显示（非最小化）
-        self.assistant_window.activateWindow()  # 让窗口获得焦点
-        self.assistant_window.raise_()  # 确保窗口在最上层
+        self.assistant_window.showNormal()  # 确保窗口正常显示
+        self.assistant_window.activateWindow()
+        self.assistant_window.raise_()
     def exit_app(self):
         self.app.quit()
 
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)
     
-    if not QSystemTrayIcon.isSystemTrayAvailable():
-        print("系统托盘不可用")
-        sys.exit(1)
+#     if not QSystemTrayIcon.isSystemTrayAvailable():
+#         print("系统托盘不可用")
+#         sys.exit(1)
 
-    tray_app = SystemTrayApp(app)
-    tray_app.assistant_window.show()  # 显示主窗口
+#     tray_app = SystemTrayApp(app)
+#     tray_app.assistant_window.show()  # 显示主窗口
     
-    sys.exit(app.exec())
+#     sys.exit(app.exec())
