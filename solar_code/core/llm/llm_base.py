@@ -1,16 +1,16 @@
 # ./core/llm/llm_base.py
 # 作者：lxfight
 
-from openai import OpenAI
+from openai import AsyncOpenAI
 import json
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, AsyncGenerator
 from abc import ABC, abstractmethod
 
 class LLM_Base:
     # LLM_Base类是一个抽象基类，定义了一个接口，包含了chat_completion、chat_completion_with_function、stream_chat_completion三个方法。
     # LLM_Base类的子类需要实现这三个方法。
     @abstractmethod
-    def chat_completion(
+    async def chat_completion(
         self,
         messages: List[Dict],
         temperature: float = 0.7,
@@ -27,7 +27,7 @@ class LLM_Base:
         pass
 
     @abstractmethod
-    def chat_completion_with_function(
+    async def chat_completion_with_function(
         self,
         messages: List[Dict],
         functions: List[Dict],
@@ -47,13 +47,13 @@ class LLM_Base:
         """
         pass
 
-    def stream_chat_completion(
+    async def stream_chat_completion(
         self,
         messages: List[Dict],
         temperature: float = 0.7,
         max_tokens: int = 2048,
         **kwargs
-    ):
+    )-> AsyncGenerator[str, None]:
         """
         流式对话调用
         :param messages: 消息列表

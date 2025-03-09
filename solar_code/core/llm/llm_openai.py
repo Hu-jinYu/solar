@@ -1,9 +1,9 @@
 # ./core/llm/llm_openai.py
 # 作者：lxfight
 
-from openai import OpenAI
+from openai import AsyncOpenAI
 import json
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, AsyncGenerator
 from core import LLM_Base
 from config import CONFIG
 
@@ -16,12 +16,12 @@ class LLM_OpenAI(LLM_Base):
         :param model: 要使用的模型名称
         """
         self.model = model
-        self.client = OpenAI(
+        self.client = AsyncOpenAI(
                     base_url=api_base,
                     api_key=api_key
                 )
 
-    def chat_completion(
+    async def chat_completion(
         self,
         messages: List[Dict],
         temperature: float = 0.7,
@@ -35,7 +35,7 @@ class LLM_OpenAI(LLM_Base):
         :param max_tokens: 最大token数
         :return: 模型生成的文本内容
         """
-        response = self.client.chat.completions.create(
+        response = await self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             temperature=temperature,
@@ -44,7 +44,7 @@ class LLM_OpenAI(LLM_Base):
         )
         return response.choices[0].message.content
     
-    def chat_completion_with_function(
+    async def chat_completion_with_function(
         self,
         messages: List[Dict],
         functions: List[Dict],
@@ -62,7 +62,7 @@ class LLM_OpenAI(LLM_Base):
         :param max_tokens: 最大token数
         :return: 包含内容和函数调用的字典
         """
-        response = self.client.chat.completions.create(
+        response = await self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             functions=functions,
@@ -83,13 +83,13 @@ class LLM_OpenAI(LLM_Base):
             }
         return result
     
-    def stream_chat_completion(
+    async def stream_chat_completion(
         self,
         messages: List[Dict],
         temperature: float = 0.7,
         max_tokens: int = 2048,
         **kwargs
-    ):
+    )-> AsyncGenerator[str, None]:
         """
         流式对话调用
         :param messages: 消息列表
@@ -97,7 +97,7 @@ class LLM_OpenAI(LLM_Base):
         :param max_tokens: 最大token数
         :return: 生成器，逐块返回内容
         """
-        response = self.client.chat.completions.create(
+        response = await self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             temperature=temperature,
@@ -105,9 +105,10 @@ class LLM_OpenAI(LLM_Base):
             stream=True,
             **kwargs
         )
-        for chunk in response:
-            if chunk.choices[0].delta.content:
-                yield chunk.choices[0].delta.content
+        async for chunk in response:
+            content = chunk.choices[0].delta.content
+            if content:
+                yield content
     
     @staticmethod
     def get_available_models() -> List[str]:

@@ -1,8 +1,7 @@
 # ./core/data_structure/llm_message.py
 # 作者：lxfight
 
-from dataclasses import dataclass, field
-from datetime import datetime
+from dataclasses import dataclass
 from typing import List, Dict, Optional
 
 @dataclass
@@ -13,12 +12,16 @@ class DialogueMessage:
     content: str         # 消息内容
     timestamp: float     # 时间戳
 
-    def to_dict(self) -> Dict:
-        """转换为字典格式"""
-        return {
-            "session_id": self.session_id,
-            "role": self.role,
-            "content": self.content,
-            "timestamp": self.timestamp,
-        }
-    
+@dataclass
+class Session_Title:
+    """会话列表和标题名称"""
+    session_id: str
+    title: str
+
+@dataclass
+class dialogue_data:
+    """对话数据结构"""
+    dialogue_info: Session_Title
+    dialogue_messages: List[DialogueMessage]
+
+
