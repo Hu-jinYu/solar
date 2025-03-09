@@ -148,16 +148,12 @@ class ReminderManager:
         """创建备忘录表（如果不存在）"""
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS reminders (
-                reminder_id TEXT PRIMARY KEY,  -- 提醒事件唯一标识
-                user_id TEXT NOT NULL,         -- 关联用户
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 创建时间
-                remind_time DATETIME,          -- 提醒时间（可为空）
-                event_type TEXT CHECK (event_type IN ('单次', '循环')),  -- 事件类型
-                cycle_type TEXT,               -- 循环类型（如每天/每周）
-                title TEXT NOT NULL,           -- 事件标题
+                title TEXT NOT NULL,           -- 事件标题   
                 content TEXT,                  -- 事件内容
-                expired BOOLEAN DEFAULT 0,     -- 是否过期
-                FOREIGN KEY (user_id) REFERENCES users(user_id)     -- 待考察
+                event_type TEXT,                -- 事件类型
+                remind_time DATETIME,          -- 提醒时间（可为空）
+                status TEXT CHECK(status IN ("未完成","已完成","已过期")),      
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,  -- 时间戳      
             )
         ''')
         self.conn.commit()
@@ -233,7 +229,6 @@ class PersonaManager:
         """创建人格设定表（如果不存在）"""
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS personas (
-                persona_id TEXT PRIMARY KEY,  -- 人格唯一标识
                 name TEXT NOT NULL UNIQUE,    -- 人格名称（唯一）
                 prompt TEXT                   -- 提示词
             )
