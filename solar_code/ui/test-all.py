@@ -350,31 +350,32 @@ class AboutDialog(QDialog):
 class SystemTrayApp:
     def __init__(self, app):
         self.app = app
-        icon_path = r"..\resources\icon.ico"  # solar\solar_code\resources\icon.ico"
+        icon_path = r"D:\Solar\solar\solar_code\resources\icon.ico"  # 确保路径正确
         self.icon = QIcon(icon_path)
         if self.icon.isNull():
             print(f"图标路径无效: {icon_path}")
             sys.exit(1)
         self.tray_icon = QSystemTrayIcon(self.icon, parent=app)
+        
+        # 新增：连接托盘图标的单击事件到显示窗口
+        self.tray_icon.activated.connect(self.show_window)  # 处理单击托盘图标
+        
         self.create_menu()
         self.assistant_window = AssistantWindow()
         self.tray_icon.show()
-
     def create_menu(self):
-        """创建系统托盘菜单"""
         menu = QMenu()
-        menu.addAction("显示助手", self.show_window)  # 显示主窗口菜单项
-        menu.addAction("退出程序", self.exit_app)     # 退出程序菜单项
+        menu.addAction("显示助手", self.show_window)  # 右键菜单显示
+        menu.addAction("退出程序", self.exit_app)
         self.tray_icon.setContextMenu(menu)
-
-    def show_window(self):
-        """通过托盘菜单显示主窗口"""
-        self.assistant_window.show()
-        self.assistant_window.activateWindow()
-
+    def show_window(self, reason=QSystemTrayIcon.ActivationReason.Trigger):  # 新增参数默认值
+        """显示主窗口并激活"""
+        self.assistant_window.showNormal()  # 确保窗口正常显示（非最小化）
+        self.assistant_window.activateWindow()  # 让窗口获得焦点
+        self.assistant_window.raise_()  # 确保窗口在最上层
     def exit_app(self):
-        """退出整个应用程序"""
         self.app.quit()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
